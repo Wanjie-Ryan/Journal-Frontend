@@ -5,6 +5,7 @@ import { TextInput, Button, Text } from "react-native-paper";
 const Login = ({ navigation }) => {
   return (
     <View style={styles.container}>
+      <Text style={styles.title}>Login To Your Journal App</Text>
       <TextInput label="Email" mode="outlined" style={styles.input} />
       <TextInput
         label="Password"
@@ -34,6 +35,12 @@ const styles = StyleSheet.create({
   link: {
     marginTop: 10,
     color: "blue",
+    textAlign: "center",
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 20,
     textAlign: "center",
   },
 });

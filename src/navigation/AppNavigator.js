@@ -7,6 +7,7 @@ const AppNavigator = () => {
   return (
     <NavigationContainer>
       <AuthStack />
+      {/* <MainStack /> */}
     </NavigationContainer>
   );
 };
