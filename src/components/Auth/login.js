@@ -3,6 +3,15 @@ import { View, StyleSheet } from "react-native";
 import { TextInput, Button, Text } from "react-native-paper";
 
 const Login = ({ navigation }) => {
+  const handleLogin = () => {
+    // Simulate authentication logic here
+
+    // Navigate to MainStack's Dashboard
+    navigation.navigate("Main", {
+      screen: "Dashboard",
+    });
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Login To Your Journal App</Text>
@@ -13,7 +22,7 @@ const Login = ({ navigation }) => {
         secureTextEntry
         style={styles.input}
       />
-      <Button mode="contained" onPress={() => navigation.navigate("Dashboard")}>
+      <Button mode="contained" onPress={handleLogin}>
         Login
       </Button>
       <Text style={styles.link} onPress={() => navigation.navigate("Register")}>
