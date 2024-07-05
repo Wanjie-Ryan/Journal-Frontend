@@ -1,7 +1,7 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import Dashboard from "../components/dashboard/dash";
-
+import CreateJournal from "../components/createJournal/createJournal";
 const Stack = createStackNavigator();
 
 const MainStack = () => (
@@ -9,6 +9,12 @@ const MainStack = () => (
     <Stack.Screen
       name="Dashboard"
       component={Dashboard}
+      options={{ headerShown: false }}
+    />
+
+    <Stack.Screen
+      name="CreateJournal"
+      component={CreateJournal}
       options={{ headerShown: false }}
     />
   </Stack.Navigator>
