@@ -49,14 +49,18 @@ const CreateJournal = ({ navigation }) => {
         />
       )}
       <RadioButton.Group
-        onValueChange={newValue => setCategory(newValue)}
+        onValueChange={(newValue) => setCategory(newValue)}
         value={category}
       >
         <RadioButton.Item label="Work" value="work" />
         <RadioButton.Item label="Travel" value="travel" />
         <RadioButton.Item label="Personal" value="personal" />
       </RadioButton.Group>
-      <Button mode="contained" onPress={handleCreateJournal} style={styles.button}>
+      <Button
+        mode="contained"
+        onPress={handleCreateJournal}
+        style={styles.button}
+      >
         Create Journal
       </Button>
     </ScrollView>
