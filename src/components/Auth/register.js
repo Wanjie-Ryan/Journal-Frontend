@@ -5,7 +5,7 @@ import { TextInput, Button, Text } from "react-native-paper";
 const Register = ({ navigation }) => {
   return (
     <View style={styles.container}>
-        <Text>Welcome To Your Journal </Text>
+        <Text style={styles.title}>Welcome To Your Journal Application </Text>
       <TextInput label="Username" mode="outlined" style={styles.input} />
       <TextInput label="Email" mode="outlined" style={styles.input} />
       <TextInput
