@@ -58,10 +58,10 @@ const Dashboard = ({ navigation }) => {
       </View>
       <ScrollView contentContainerStyle={styles.contentContainer}>
         {currentJournals.map((journal) => (
-          <TouchableOpacity
-            key={journal.id}
-            onPress={() => console.log(`Navigate to journal ${journal.id}`)}
-          >
+           <TouchableOpacity
+           key={journal.id}
+           onPress={() => navigation.navigate("JournalDetail", { journalId: journal.id })}
+         >
             <Card style={styles.card}>
               <Card.Content>
                 <Text style={styles.contentTitle}>{journal.title}</Text>
