@@ -49,7 +49,6 @@ const CreateJournal = ({ navigation }) => {
         text1: "Journal Created Successfully",
       });
 
-
       setLoading(false);
 
       // console.log("Journal created:", response.data);
