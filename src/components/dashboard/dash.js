@@ -1,6 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { View, StyleSheet, ScrollView, TouchableOpacity } from "react-native";
-import { Button, Text, Card, Menu, Divider, TextInput } from "react-native-paper";
+import {
+  Button,
+  Text,
+  Card,
+  Menu,
+  Divider,
+  TextInput,
+} from "react-native-paper";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -51,18 +58,20 @@ const Dashboard = ({ navigation }) => {
       setLoading(true);
       const token = await AsyncStorage.getItem("token");
       const response = await axios.get(
-        `http://192.168.100.10:3005/api/v1/filterJournalsByCategory/${category}`,
+        `http://192.168.100.10:3005/api/v1/categoryJournals/?category=${category}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
-      setJournals(response.data.filteredJournals);
+      setJournals(response.data.Journals);
       setLoading(false);
     } catch (error) {
       console.error("Error filtering journals by category:", error);
       // Handle error state or show error message
+      setLoading(false);
+    } finally {
       setLoading(false);
     }
   };
@@ -72,15 +81,20 @@ const Dashboard = ({ navigation }) => {
     try {
       setLoading(true);
       const token = await AsyncStorage.getItem("token");
-      const response = await axios.get(
-        `http://192.168.100.10:3005/api/v1/filterJournalsByPeriod/${periodFilter}?startDate=${startDate}&endDate=${endDate}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      setJournals(response.data.filteredJournals);
+
+      // Construct the URL with all parameters in the query string
+      const url = `http://192.168.100.10:3005/api/summary/journalSummary?period=${periodFilter}&startDate=${startDate}&endDate=${endDate}`;
+
+      // console.log("Request URL:", url);
+
+      const response = await axios.get(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      // console.log(response)
+
+      setJournals(response.data.journals);
       setLoading(false);
     } catch (error) {
       console.error("Error filtering journals by period:", error);
@@ -88,7 +102,6 @@ const Dashboard = ({ navigation }) => {
       setLoading(false);
     }
   };
-
   // Reset filters and fetch all journals
   const resetFilters = async () => {
     try {
@@ -155,11 +168,35 @@ const Dashboard = ({ navigation }) => {
             </Button>
           }
         >
-          <Menu.Item onPress={() => { setFilterCategory("All"); setCategoryMenuVisible(false); }} title="All Categories" />
+          <Menu.Item
+            onPress={() => {
+              setFilterCategory("All");
+              setCategoryMenuVisible(false);
+            }}
+            title="All Categories"
+          />
           <Divider />
-          <Menu.Item onPress={() => { filterByCategory("Work"); setCategoryMenuVisible(false); }} title="Work" />
-          <Menu.Item onPress={() => { filterByCategory("Travel"); setCategoryMenuVisible(false); }} title="Travel" />
-          <Menu.Item onPress={() => { filterByCategory("Personal"); setCategoryMenuVisible(false); }} title="Personal" />
+          <Menu.Item
+            onPress={() => {
+              filterByCategory("Work");
+              setCategoryMenuVisible(false);
+            }}
+            title="Work"
+          />
+          <Menu.Item
+            onPress={() => {
+              filterByCategory("Travel");
+              setCategoryMenuVisible(false);
+            }}
+            title="Travel"
+          />
+          <Menu.Item
+            onPress={() => {
+              filterByCategory("Personal");
+              setCategoryMenuVisible(false);
+            }}
+            title="Personal"
+          />
         </Menu>
       </View>
 
@@ -168,14 +205,14 @@ const Dashboard = ({ navigation }) => {
         <Text style={styles.filterTitle}>Filter by Period:</Text>
         <TextInput
           mode="outlined"
-          label="Start Date"
+          label="Start Date eg. 2022-04-10, YYYY-MM-DD"
           value={startDate}
           onChangeText={setStartDate}
           style={styles.dateInput}
         />
         <TextInput
           mode="outlined"
-          label="End Date"
+          label="End Date eg. 2022-04-10, YYYY-MM-DD"
           value={endDate}
           onChangeText={setEndDate}
           style={styles.dateInput}
@@ -185,21 +222,45 @@ const Dashboard = ({ navigation }) => {
           onDismiss={() => setPeriodMenuVisible(false)}
           anchor={
             <Button onPress={() => setPeriodMenuVisible(true)}>
-              {periodFilter === "daily" ? "Daily" : 
-              periodFilter === "weekly" ? "Weekly" : 
-              periodFilter === "monthly" ? "Monthly" : 
-              "Select Period"
-            }
+              {periodFilter === "daily"
+                ? "Daily"
+                : periodFilter === "weekly"
+                ? "Weekly"
+                : periodFilter === "monthly"
+                ? "Monthly"
+                : "Select Period"}
             </Button>
           }
         >
-          <Menu.Item onPress={() => { setPeriodFilter("daily"); setPeriodMenuVisible(false); }} title="Daily" />
+          <Menu.Item
+            onPress={() => {
+              setPeriodFilter("daily");
+              setPeriodMenuVisible(false);
+            }}
+            title="Daily"
+          />
           <Divider />
-          <Menu.Item onPress={() => { setPeriodFilter("weekly"); setPeriodMenuVisible(false); }} title="Weekly" />
+          <Menu.Item
+            onPress={() => {
+              setPeriodFilter("weekly");
+              setPeriodMenuVisible(false);
+            }}
+            title="Weekly"
+          />
           <Divider />
-          <Menu.Item onPress={() => { setPeriodFilter("monthly"); setPeriodMenuVisible(false); }} title="Monthly" />
+          <Menu.Item
+            onPress={() => {
+              setPeriodFilter("monthly");
+              setPeriodMenuVisible(false);
+            }}
+            title="Monthly"
+          />
         </Menu>
-        <Button mode="contained" onPress={filterByPeriod} style={styles.filterButton}>
+        <Button
+          mode="contained"
+          onPress={filterByPeriod}
+          style={styles.filterButton}
+        >
           Apply Filter
         </Button>
         <Button onPress={resetFilters} style={styles.clearButton}>
