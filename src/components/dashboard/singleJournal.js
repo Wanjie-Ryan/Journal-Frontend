@@ -5,6 +5,7 @@ import { Picker } from "@react-native-picker/picker";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Toast from "react-native-toast-message";
+import Requests from "../../API/api";
 const JournalDetail = ({ route, navigation }) => {
   const { journalId } = route.params;
   const [journal, setJournal] = useState(null);
@@ -19,8 +20,8 @@ const JournalDetail = ({ route, navigation }) => {
       setLoading(true);
       try {
         const token = await AsyncStorage.getItem("token");
-        const response = await axios.get(
-          `http://192.168.100.10:3005/api/v1/getSingleJournal/${journalId}`,
+        const response = await Requests.get(
+          `api/v1/getSingleJournal/${journalId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -51,8 +52,8 @@ const JournalDetail = ({ route, navigation }) => {
     try {
       setLoading(true);
       const token = await AsyncStorage.getItem("token");
-      await axios.put(
-        `http://192.168.100.10:3005/api/v1/updateJournal/${journalId}`,
+      await Requests.put(
+        `api/v1/updateJournal/${journalId}`,
         {
           title: editTitle,
           category: editCategory,
@@ -87,14 +88,11 @@ const JournalDetail = ({ route, navigation }) => {
     try {
       setLoading(true);
       const token = await AsyncStorage.getItem("token");
-      await axios.delete(
-        `http://192.168.100.10:3005/api/v1/deleteJournal/${journalId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      await Requests.delete(`api/v1/deleteJournal/${journalId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       Toast.show({
         type: "success",
         text1: "Journal Deleted Successfully",
