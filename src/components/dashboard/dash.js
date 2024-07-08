@@ -28,7 +28,7 @@ const Dashboard = ({ navigation }) => {
         setLoading(false);
         setJournals(response.data.Journals);
       } catch (error) {
-        console.error("Error fetching journals:", error);
+        // console.error("Error fetching journals:", error);
         // Handle error state or show error message
       } finally {
         setLoading(false); // Update loading state regardless of success or failure
