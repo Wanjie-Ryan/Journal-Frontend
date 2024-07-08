@@ -1,22 +1,37 @@
 import React, { useState, useEffect } from "react";
 import { View, StyleSheet } from "react-native";
 import { Text, Button } from "react-native-paper";
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const JournalDetail = ({ route, navigation }) => {
   const { journalId } = route.params;
   const [journal, setJournal] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Fetch the journal details from the backend using the journalId
-    // This is a placeholder for the API call
-    const fetchedJournal = {
-      id: journalId,
-      title: `Journal ${journalId}`,
-      content: `Full content of journal ${journalId}`,
-      date: "2024-07-05",
-      category: "work",
+    const fetchJournal = async () => {
+      setLoading(true);
+      try {
+        const token = await AsyncStorage.getItem("token");
+        const response = await axios.get(
+          `http://192.168.100.10:3005/api/v1/getSingleJournal/${journalId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setJournal(response.data.journal);
+      } catch (error) {
+        console.error("Error fetching journal:", error);
+        // Handle error state or show error message
+      } finally {
+        setLoading(false);
+      }
     };
-    setJournal(fetchedJournal);
+
+    fetchJournal();
   }, [journalId]);
 
   const handleEdit = () => {
@@ -30,7 +45,7 @@ const JournalDetail = ({ route, navigation }) => {
     navigation.navigate("Dashboard");
   };
 
-  if (!journal) {
+  if (loading || !journal) {
     return <Text>Loading...</Text>;
   }
 
