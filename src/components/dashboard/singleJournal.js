@@ -95,6 +95,10 @@ const JournalDetail = ({ route, navigation }) => {
           },
         }
       );
+      Toast.show({
+        type: "success",
+        text1: "Journal Deleted Successfully",
+      });
       setLoading(false);
       // console.log("Journal deleted:", journalId);
       setTimeout(() => {
