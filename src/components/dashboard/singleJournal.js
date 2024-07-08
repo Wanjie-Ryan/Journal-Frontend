@@ -7,7 +7,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const JournalDetail = ({ route, navigation }) => {
   const { journalId } = route.params;
   const [journal, setJournal] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchJournal = async () => {
@@ -22,6 +22,7 @@ const JournalDetail = ({ route, navigation }) => {
             },
           }
         );
+        setLoading(false);
         setJournal(response.data.journal);
       } catch (error) {
         console.error("Error fetching journal:", error);
@@ -39,10 +40,29 @@ const JournalDetail = ({ route, navigation }) => {
     console.log("Edit journal:", journalId);
   };
 
-  const handleDelete = () => {
-    // Placeholder for delete functionality
-    console.log("Delete journal:", journalId);
-    navigation.navigate("Dashboard");
+  const handleDelete = async () => {
+    try {
+      setLoading(true);
+      const token = await AsyncStorage.getItem("token");
+      await axios.delete(
+        `http://192.168.100.10:3005/api/v1/deleteJournal/${journalId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setLoading(false);
+      // console.log("Journal deleted:", journalId);
+      setTimeout(() => {
+        navigation.navigate("Dashboard");
+      }, 1000);
+    } catch (error) {
+      console.error("Error deleting journal:", error);
+      // Handle error state or show error message
+    } finally {
+      setLoading(false);
+    }
   };
 
   if (loading || !journal) {
@@ -63,7 +83,7 @@ const JournalDetail = ({ route, navigation }) => {
         onPress={handleDelete}
         style={styles.deleteButton}
       >
-        Delete
+        {loading ? "Deleting..." : "Delete"}
       </Button>
     </View>
   );
