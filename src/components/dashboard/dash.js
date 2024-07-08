@@ -6,14 +6,16 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Dashboard = ({ navigation }) => {
   const [journals, setJournals] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const journalsPerPage = 10;
 
   useEffect(() => {
     const fetchJournals = async () => {
       try {
+        setLoading(true);
         const token = await AsyncStorage.getItem("token");
+        // console.log(token)
 
         const response = await axios.get(
           "http://192.168.100.10:3005/api/v1/getAllJournals",
@@ -23,8 +25,8 @@ const Dashboard = ({ navigation }) => {
             },
           }
         );
-
-        setJournals(response.data.Journals); // Assuming response.data is an array of journals
+        setLoading(false);
+        setJournals(response.data.Journals);
       } catch (error) {
         console.error("Error fetching journals:", error);
         // Handle error state or show error message
