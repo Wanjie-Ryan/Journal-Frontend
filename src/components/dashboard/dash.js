@@ -273,43 +273,47 @@ const Dashboard = ({ navigation }) => {
       </View>
 
       <ScrollView contentContainerStyle={styles.contentContainer}>
-        {!isFilterActive ? (
-          currentJournals.map((journal) => (
-            <TouchableOpacity
-              key={journal.id}
-              onPress={() =>
-                navigation.navigate("JournalDetail", { journalId: journal.id })
-              }
-            >
-              <Card style={styles.card}>
-                <Card.Content>
-                  <Text style={styles.contentTitle}>{journal.title}</Text>
-                  <Text style={styles.contentPreview}>
-                    {journal.content.length > 100
-                      ? `${journal.content.substring(0, 100)}...`
-                      : journal.content}
-                  </Text>
-                </Card.Content>
-              </Card>
-            </TouchableOpacity>
-          ))
-        ) : (
-          periodJournals.map((periodJournal, index) => (
-            <View key={index} style={styles.periodJournal}>
-              <Text style={styles.periodTitle}>
-                {periodFilter === "daily"
-                  ? `Date: ${periodJournal.period}`
-                  : periodFilter === "weekly"
-                  ? `Week: ${periodJournal.period}`
-                  : periodFilter === "monthly"
-                  ? `Month: ${periodJournal.period}`
-                  : `Period: ${periodJournal.period}`}
-              </Text>
-              <Text style={styles.entryCount}>Entries: {periodJournal.entryCount}</Text>
-              <Text style={styles.titles}>Titles: {periodJournal.titles}</Text>
-            </View>
-          ))
-        )}
+        {!isFilterActive
+          ? currentJournals.map((journal) => (
+              <TouchableOpacity
+                key={journal.id}
+                onPress={() =>
+                  navigation.navigate("JournalDetail", {
+                    journalId: journal.id,
+                  })
+                }
+              >
+                <Card style={styles.card}>
+                  <Card.Content>
+                    <Text style={styles.contentTitle}>{journal.title}</Text>
+                    <Text style={styles.contentPreview}>
+                      {journal.content.length > 100
+                        ? `${journal.content.substring(0, 100)}...`
+                        : journal.content}
+                    </Text>
+                  </Card.Content>
+                </Card>
+              </TouchableOpacity>
+            ))
+          : periodJournals.map((periodJournal, index) => (
+              <View key={index} style={styles.periodJournal}>
+                <Text style={styles.periodTitle}>
+                  {periodFilter === "daily"
+                    ? `Date: ${periodJournal.period}`
+                    : periodFilter === "weekly"
+                    ? `Week: ${periodJournal.period}`
+                    : periodFilter === "monthly"
+                    ? `Month: ${periodJournal.period}`
+                    : `Period: ${periodJournal.period}`}
+                </Text>
+                <Text style={styles.entryCount}>
+                  Entries: {periodJournal.entryCount}
+                </Text>
+                <Text style={styles.titles}>
+                  Titles: {periodJournal.titles}
+                </Text>
+              </View>
+            ))}
       </ScrollView>
 
       <View style={styles.pagination}>
