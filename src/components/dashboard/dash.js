@@ -68,7 +68,7 @@ const Dashboard = ({ navigation }) => {
       );
       setJournals(response.data.Journals);
       setLoading(false);
-      setIsFilterActive(true);
+      // setIsFilterActive(true);
     } catch (error) {
       console.error("Error filtering journals by category:", error);
       // Handle error state or show error message
