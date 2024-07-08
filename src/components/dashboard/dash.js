@@ -11,6 +11,7 @@ import {
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Icon from "react-native-vector-icons/MaterialIcons";
+import Requests from "../../API/api";
 const Dashboard = ({ navigation }) => {
   const [journals, setJournals] = useState([]);
   const [periodJournals, setPeriodJournals] = useState([]);
@@ -33,14 +34,11 @@ const Dashboard = ({ navigation }) => {
       try {
         setLoading(true);
         const token = await AsyncStorage.getItem("token");
-        const response = await axios.get(
-          "http://192.168.100.10:3005/api/v1/getAllJournals",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await Requests.get("api/v1/getAllJournals", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         setLoading(false);
         setJournals(response.data.Journals);
       } catch (error) {
@@ -58,8 +56,8 @@ const Dashboard = ({ navigation }) => {
     try {
       setLoading(true);
       const token = await AsyncStorage.getItem("token");
-      const response = await axios.get(
-        `http://192.168.100.10:3005/api/v1/categoryJournals/?category=${category}`,
+      const response = await Requests.get(
+        `api/v1/categoryJournals/?category=${category}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -85,11 +83,11 @@ const Dashboard = ({ navigation }) => {
       const token = await AsyncStorage.getItem("token");
 
       // Construct the URL with all parameters in the query string
-      const url = `http://192.168.100.10:3005/api/summary/journalSummary?period=${periodFilter}&startDate=${startDate}&endDate=${endDate}`;
+      const url = `api/summary/journalSummary?period=${periodFilter}&startDate=${startDate}&endDate=${endDate}`;
 
       // console.log("Request URL:", url);
 
-      const response = await axios.get(url, {
+      const response = await Requests.get(url, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -110,14 +108,11 @@ const Dashboard = ({ navigation }) => {
     try {
       setLoading(true);
       const token = await AsyncStorage.getItem("token");
-      const response = await axios.get(
-        "http://192.168.100.10:3005/api/v1/getAllJournals",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await Requests.get("api/v1/getAllJournals", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setJournals(response.data.Journals);
       setLoading(false);
       setIsFilterActive(false);

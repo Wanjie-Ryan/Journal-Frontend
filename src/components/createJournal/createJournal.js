@@ -5,7 +5,7 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Toast from "react-native-toast-message";
-
+import Requests from "../../API/api";
 const CreateJournal = ({ navigation }) => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -34,8 +34,8 @@ const CreateJournal = ({ navigation }) => {
         category,
       };
 
-      const response = await axios.post(
-        "http://192.168.100.10:3005/api/v1/createjournal",
+      const response = await Requests.post(
+        "api/v1/createjournal",
         journalData,
         {
           headers: {
