@@ -3,6 +3,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import Dashboard from "../components/dashboard/dash";
 import CreateJournal from "../components/createJournal/createJournal";
 import JournalDetail from "../components/dashboard/singleJournal";
+import Settings from "../components/settings/settings";
 const Stack = createStackNavigator();
 
 const MainStack = () => (
