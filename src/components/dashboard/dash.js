@@ -6,7 +6,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Dashboard = ({ navigation }) => {
   const [journals, setJournals] = useState([]);
-  const [loading, setLoading] = useState(true); // Start with loading state
+  const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const journalsPerPage = 10;
 
