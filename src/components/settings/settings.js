@@ -3,7 +3,7 @@ import { View, StyleSheet } from "react-native";
 import { Text, Button, TextInput } from "react-native-paper";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import Toast from "react-native-toast-message";
 const Settings = ({ navigation }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -14,7 +14,7 @@ const Settings = ({ navigation }) => {
       setLoading(true);
       const token = await AsyncStorage.getItem("token");
       await axios.put(
-        `http://192.168.100.10:3005/api/v1/updateUser`,
+        `http://192.168.100.10:3005/api/auth/updateProfile`,
         {
           username,
           password,
@@ -25,11 +25,21 @@ const Settings = ({ navigation }) => {
           },
         }
       );
+
+      Toast.show({
+        type: "success",
+        text1: "User Details Updated Successfully",
+      });
+
       setLoading(false);
-      navigation.navigate("Dashboard");
+      setTimeout(() => {
+        navigation.navigate("Dashboard");
+      }, 1000);
     } catch (error) {
       console.error("Error updating user details:", error);
       // Handle error state or show error message
+      setLoading(false);
+    } finally {
       setLoading(false);
     }
   };
