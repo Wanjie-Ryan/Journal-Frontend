@@ -4,6 +4,7 @@ import { TextInput, Button, Text } from "react-native-paper";
 import axios from "axios";
 import Toast from "react-native-toast-message";
 import { LogContext } from "../../context/LogContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Login = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -37,6 +38,7 @@ const Login = ({ navigation }) => {
       );
 
       // console.log(response);
+      await AsyncStorage.setItem("token", response.data.token);
 
       dispatch({ type: "logComplete", payload: response.data });
       Toast.show({
