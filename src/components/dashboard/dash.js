@@ -1,30 +1,49 @@
 import React, { useState, useEffect } from "react";
 import { View, StyleSheet, ScrollView, TouchableOpacity } from "react-native";
 import { Button, Text, Card } from "react-native-paper";
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Dashboard = ({ navigation }) => {
   const [journals, setJournals] = useState([]);
+  const [loading, setLoading] = useState(true); // Start with loading state
   const [currentPage, setCurrentPage] = useState(1);
   const journalsPerPage = 10;
 
   useEffect(() => {
-    // Fetch journals from the backend and set them in the state
-    // This is a placeholder for the API call
-    const fetchedJournals = [
-      { id: 1, title: "Journal 1", content: "Content of journal 1" },
-      { id: 2, title: "Journal 2", content: "Content of journal 2" },
-      { id: 3, title: "Journal 3", content: "Content of journal 3" },
-      { id: 4, title: "Journal 4", content: "Content of journal 4" },
-      { id: 5, title: "Journal 5", content: "Content of journal 5" },
-      { id: 6, title: "Journal 6", content: "Content of journal 6" },
-      { id: 7, title: "Journal 7", content: "Content of journal 7" },
-      { id: 8, title: "Journal 8", content: "Content of journal 8" },
-      { id: 9, title: "Journal 9", content: "Content of journal 9" },
-      { id: 10, title: "Journal 10", content: "Content of journal 10" },
-      // Add more journals as needed
-    ];
-    setJournals(fetchedJournals);
+    const fetchJournals = async () => {
+      try {
+        const token = await AsyncStorage.getItem("token");
+
+        const response = await axios.get(
+          "http://192.168.100.10:3005/api/v1/getAllJournals",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        setJournals(response.data.Journals); // Assuming response.data is an array of journals
+      } catch (error) {
+        console.error("Error fetching journals:", error);
+        // Handle error state or show error message
+      } finally {
+        setLoading(false); // Update loading state regardless of success or failure
+      }
+    };
+
+    fetchJournals();
   }, []);
+
+  // Check if journals is empty or not yet fetched
+  if (loading || journals.length === 0) {
+    return (
+      <View style={styles.container}>
+        <Text>Loading...</Text>
+      </View>
+    );
+  }
 
   const indexOfLastJournal = currentPage * journalsPerPage;
   const indexOfFirstJournal = indexOfLastJournal - journalsPerPage;

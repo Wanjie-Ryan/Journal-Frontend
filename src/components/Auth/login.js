@@ -38,8 +38,9 @@ const Login = ({ navigation }) => {
       );
 
       // console.log(response);
-      await AsyncStorage.setItem("token", response.data.token);
+      const tok = await AsyncStorage.setItem("token", response.data.token);
 
+      console.log(tok)
       dispatch({ type: "logComplete", payload: response.data });
       Toast.show({
         type: "success",
