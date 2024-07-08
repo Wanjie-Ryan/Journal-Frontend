@@ -84,3 +84,27 @@ You can run the app on an Android emulator, iOS simulator, or the Expo Go app on
 - Make sure your backend server is running and accessible via your local network.
 
 By following these steps, you should be able to successfully build and run the mobile app locally on your machine. If you encounter any issues or have questions, feel free to reach out for support.
+
+### Project Timeline
+
+#### Day 1 - 3rd July
+
+- Reviewed the project requirements and deliverables.
+- Understood the scope and necessary functionalities.
+- Began coding the backend, implementing the core logic and setting up initial endpoints.
+
+#### Day 2 - 4th July
+
+- Continued development of the backend, finalizing key features and ensuring endpoint functionality.
+- Started designing the frontend using React Native, focusing on the layout and user interface components.
+
+#### Day 3 - 5th July
+
+- Progressed with frontend development, building out the main UI elements and integrating them with the backend services.
+- Focused on creating a seamless and intuitive user experience.
+
+#### Day 4 - 6th July
+
+- Integrated the backend and frontend, ensuring smooth communication between the two.
+- Conducted thorough testing of the app to verify that all endpoints and features function correctly.
+- Documented the entire project, including setup instructions, and performed code cleanup to enhance readability and maintainability.
