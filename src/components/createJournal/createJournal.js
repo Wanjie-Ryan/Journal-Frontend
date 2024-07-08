@@ -1,7 +1,15 @@
 import React, { useState } from "react";
 import { View, StyleSheet, ScrollView } from "react-native";
-import { TextInput, Button, Text, RadioButton, Menu } from "react-native-paper";
+import {
+  TextInput,
+  Button,
+  Text,
+  RadioButton,
+} from "react-native-paper";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import Toast from "react-native-toast-message";
 
 const CreateJournal = ({ navigation }) => {
   const [title, setTitle] = useState("");
@@ -9,11 +17,50 @@ const CreateJournal = ({ navigation }) => {
   const [date, setDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [category, setCategory] = useState("work");
+  const [loading, setLoading] = useState(false); // State for loading indicator
 
-  const handleCreateJournal = () => {
-    // Placeholder for journal creation logic
-    console.log("Journal created:", { title, content, date, category });
-    navigation.navigate("Dashboard");
+  const handleCreateJournal = async () => {
+    try {
+
+      if(!title || !content || !date || !category){
+
+        Toast.show({
+          type: "error",
+          text1: "Please fill in all fields",
+        });
+        return;
+
+      }
+
+
+      setLoading(true); // Start loading indicator
+
+      const token = await AsyncStorage.getItem("token"); // Retrieve token from AsyncStorage
+      const journalData = {
+        title,
+        content,
+        date,
+        category,
+      };
+
+      const response = await axios.post(
+        "http://192.168.100.10:3005/api/v1/createjournal",
+        journalData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      console.log("Journal created:", response.data);
+      navigation.navigate("Dashboard");
+    } catch (error) {
+      console.error("Error creating journal:", error);
+      // Handle error state or show error message
+    } finally {
+      setLoading(false); // Stop loading indicator
+    }
   };
 
   return (
@@ -60,8 +107,9 @@ const CreateJournal = ({ navigation }) => {
         mode="contained"
         onPress={handleCreateJournal}
         style={styles.button}
+        disabled={loading} // Disable button while loading
       >
-        Create Journal
+        {loading ? "Loading..." : "Create Journal"} {/* Toggle button text based on loading state */}
       </Button>
     </ScrollView>
   );
