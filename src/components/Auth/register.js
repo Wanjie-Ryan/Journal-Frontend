@@ -1,36 +1,109 @@
-import React, {useState, useContext} from "react";
+import React, { useState, useContext } from "react";
 import { View, StyleSheet } from "react-native";
 import { TextInput, Button, Text } from "react-native-paper";
+import axios from "axios";
+import Toast from "react-native-toast-message";
 import { RegContext } from "../../context/RegContext";
+
 const Register = ({ navigation }) => {
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const { dispatch } = useContext(RegContext);
 
-  const [username, setUsername] = useState('')
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const handleRegister = async () => {
+    if (!username || !email || !password) {
+      Toast.show({
+        type: "error",
+        text1: "Please fill in all fields",
+      });
+      return;
+    }
 
-  const handleUsername = (e)=>{
-    setUsername(e.target.value)
-  }
+    dispatch({ type: "regStart" });
 
-  const handleEmail = (e)=>{
-    setEmail(e.target.value)
-  }
+    try {
+      setLoading(true);
 
-  const handlePassword = (e)=>{
-    setPassword(e.target.value)
-  }
+      const registrationData = {
+        username,
+        email,
+        password,
+      };
 
-  const handleRegister = (e)=>{
+      // const response = await axios.post('http://localhost:3005/api/auth/register', registrationData);
+      const response = await axios.post(
+        "http://192.168.100.10:3005/api/auth/register",
+        registrationData
+      );
 
+      // console.log(response);
 
-  }
+      dispatch({ type: "regComplete", payload: response.data });
+      Toast.show({
+        type: "success",
+        text1: "Registration Successful",
+      });
 
+      setTimeout(() => {
+        navigation.navigate("Login");
+      }, 1000);
+
+      setLoading(false);
+    } catch (err) {
+      // console.log(err);
+      const errorMessage =
+        err.response?.data?.message ||
+        err.message ||
+        "An unexpected error occurred";
+      dispatch({ type: "regFail", payload: err });
+
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+      if (password.length < 5) {
+        Toast.show({
+          type: "error",
+          text1: "Password is too short. Please enter at least 5 characters.",
+        });
+        setLoading(false);
+        return;
+      } else if (!emailRegex.test(email)) {
+        Toast.show({
+          type: "error",
+          text1: "Invalid email address. Please enter a valid email.",
+        });
+        setLoading(false);
+        return;
+      } else {
+        Toast.show({
+          type: "error",
+          text1: errorMessage,
+        });
+        setLoading(false);
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Welcome To Your Journal Application </Text>
-      <TextInput label="Username" mode="outlined" style={styles.input} value={username} onChangeText={setUsername} />
-      <TextInput label="Email" mode="outlined" style={styles.input} value={email} onChangeText={setEmail}/>
+      <Text style={styles.title}>Welcome To Your Journal Application</Text>
+      <TextInput
+        label="Username"
+        mode="outlined"
+        style={styles.input}
+        value={username}
+        onChangeText={setUsername}
+      />
+      <TextInput
+        label="Email"
+        mode="outlined"
+        style={styles.input}
+        value={email}
+        onChangeText={setEmail}
+      />
       <TextInput
         label="Password"
         mode="outlined"
@@ -39,12 +112,13 @@ const Register = ({ navigation }) => {
         value={password}
         onChangeText={setPassword}
       />
-      <Button mode="contained" onPress={handleRegister}>
-        Register
+      <Button mode="contained" onPress={handleRegister} disabled={loading}>
+        {loading ? "Registering..." : "Register"}
       </Button>
       <Text style={styles.link} onPress={() => navigation.navigate("Login")}>
         Already have an account? Login
       </Text>
+      <Toast />
     </View>
   );
 };
