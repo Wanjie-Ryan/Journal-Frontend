@@ -13,6 +13,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Dashboard = ({ navigation }) => {
   const [journals, setJournals] = useState([]);
+  const [periodJournals, setPeriodJournals] = useState([]);
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const journalsPerPage = 10;
@@ -22,7 +23,7 @@ const Dashboard = ({ navigation }) => {
   const [periodFilter, setPeriodFilter] = useState("daily");
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-
+  const [isFilterActive, setIsFilterActive] = useState(false);
   // States for menu visibility
   const [categoryMenuVisible, setCategoryMenuVisible] = useState(false);
   const [periodMenuVisible, setPeriodMenuVisible] = useState(false);
@@ -67,6 +68,7 @@ const Dashboard = ({ navigation }) => {
       );
       setJournals(response.data.Journals);
       setLoading(false);
+      setIsFilterActive(true);
     } catch (error) {
       console.error("Error filtering journals by category:", error);
       // Handle error state or show error message
@@ -92,9 +94,10 @@ const Dashboard = ({ navigation }) => {
           Authorization: `Bearer ${token}`,
         },
       });
-      // console.log(response)
+      // console.log(response.data.journals)
 
-      setJournals(response.data.journals);
+      setPeriodJournals(response.data.journals);
+      setIsFilterActive(true);
       setLoading(false);
     } catch (error) {
       console.error("Error filtering journals by period:", error);
@@ -117,6 +120,7 @@ const Dashboard = ({ navigation }) => {
       );
       setJournals(response.data.Journals);
       setLoading(false);
+      setIsFilterActive(false);
     } catch (error) {
       console.error("Error resetting filters:", error);
       // Handle error state or show error message
@@ -269,25 +273,43 @@ const Dashboard = ({ navigation }) => {
       </View>
 
       <ScrollView contentContainerStyle={styles.contentContainer}>
-        {currentJournals.map((journal) => (
-          <TouchableOpacity
-            key={journal.id}
-            onPress={() =>
-              navigation.navigate("JournalDetail", { journalId: journal.id })
-            }
-          >
-            <Card style={styles.card}>
-              <Card.Content>
-                <Text style={styles.contentTitle}>{journal.title}</Text>
-                <Text style={styles.contentPreview}>
-                  {journal.content.length > 100
-                    ? `${journal.content.substring(0, 100)}...`
-                    : journal.content}
-                </Text>
-              </Card.Content>
-            </Card>
-          </TouchableOpacity>
-        ))}
+        {!isFilterActive ? (
+          currentJournals.map((journal) => (
+            <TouchableOpacity
+              key={journal.id}
+              onPress={() =>
+                navigation.navigate("JournalDetail", { journalId: journal.id })
+              }
+            >
+              <Card style={styles.card}>
+                <Card.Content>
+                  <Text style={styles.contentTitle}>{journal.title}</Text>
+                  <Text style={styles.contentPreview}>
+                    {journal.content.length > 100
+                      ? `${journal.content.substring(0, 100)}...`
+                      : journal.content}
+                  </Text>
+                </Card.Content>
+              </Card>
+            </TouchableOpacity>
+          ))
+        ) : (
+          periodJournals.map((periodJournal, index) => (
+            <View key={index} style={styles.periodJournal}>
+              <Text style={styles.periodTitle}>
+                {periodFilter === "daily"
+                  ? `Date: ${periodJournal.period}`
+                  : periodFilter === "weekly"
+                  ? `Week: ${periodJournal.period}`
+                  : periodFilter === "monthly"
+                  ? `Month: ${periodJournal.period}`
+                  : `Period: ${periodJournal.period}`}
+              </Text>
+              <Text style={styles.entryCount}>Entries: {periodJournal.entryCount}</Text>
+              <Text style={styles.titles}>Titles: {periodJournal.titles}</Text>
+            </View>
+          ))
+        )}
       </ScrollView>
 
       <View style={styles.pagination}>
