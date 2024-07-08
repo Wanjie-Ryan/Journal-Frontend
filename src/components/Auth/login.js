@@ -2,7 +2,7 @@ import React, { useState, useContext } from "react";
 import { View, StyleSheet } from "react-native";
 import { TextInput, Button, Text } from "react-native-paper";
 import axios from "axios";
-import Toast from 'react-native-toast-message';
+import Toast from "react-native-toast-message";
 import { LogContext } from "../../context/LogContext";
 
 const Login = ({ navigation }) => {
