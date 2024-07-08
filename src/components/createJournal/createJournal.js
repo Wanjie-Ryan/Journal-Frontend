@@ -1,11 +1,6 @@
 import React, { useState } from "react";
 import { View, StyleSheet, ScrollView } from "react-native";
-import {
-  TextInput,
-  Button,
-  Text,
-  RadioButton,
-} from "react-native-paper";
+import { TextInput, Button, Text, RadioButton } from "react-native-paper";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -16,22 +11,18 @@ const CreateJournal = ({ navigation }) => {
   const [content, setContent] = useState("");
   const [date, setDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const [category, setCategory] = useState("work");
+  const [category, setCategory] = useState("Work");
   const [loading, setLoading] = useState(false); // State for loading indicator
 
   const handleCreateJournal = async () => {
     try {
-
-      if(!title || !content || !date || !category){
-
+      if (!title || !content || !date || !category) {
         Toast.show({
           type: "error",
           text1: "Please fill in all fields",
         });
         return;
-
       }
-
 
       setLoading(true); // Start loading indicator
 
@@ -53,8 +44,19 @@ const CreateJournal = ({ navigation }) => {
         }
       );
 
-      console.log("Journal created:", response.data);
-      navigation.navigate("Dashboard");
+      Toast.show({
+        type: "success",
+        text1: "Journal Created Successfully",
+      });
+
+
+      setLoading(false);
+
+      // console.log("Journal created:", response.data);
+
+      setTimeout(() => {
+        navigation.navigate("Dashboard");
+      }, 1000);
     } catch (error) {
       console.error("Error creating journal:", error);
       // Handle error state or show error message
@@ -99,9 +101,9 @@ const CreateJournal = ({ navigation }) => {
         onValueChange={(newValue) => setCategory(newValue)}
         value={category}
       >
-        <RadioButton.Item label="Work" value="work" />
-        <RadioButton.Item label="Travel" value="travel" />
-        <RadioButton.Item label="Personal" value="personal" />
+        <RadioButton.Item label="Work" value="Work" />
+        <RadioButton.Item label="Travel" value="Travel" />
+        <RadioButton.Item label="Personal" value="Personal" />
       </RadioButton.Group>
       <Button
         mode="contained"
@@ -109,7 +111,8 @@ const CreateJournal = ({ navigation }) => {
         style={styles.button}
         disabled={loading} // Disable button while loading
       >
-        {loading ? "Loading..." : "Create Journal"} {/* Toggle button text based on loading state */}
+        {loading ? "Loading..." : "Create Journal"}{" "}
+        {/* Toggle button text based on loading state */}
       </Button>
     </ScrollView>
   );
