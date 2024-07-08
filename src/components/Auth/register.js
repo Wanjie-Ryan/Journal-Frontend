@@ -4,6 +4,7 @@ import { TextInput, Button, Text } from "react-native-paper";
 import axios from "axios";
 import Toast from "react-native-toast-message";
 import { RegContext } from "../../context/RegContext";
+import Requests from "../../API/api";
 
 const Register = ({ navigation }) => {
   const [username, setUsername] = useState("");
@@ -33,8 +34,8 @@ const Register = ({ navigation }) => {
       };
 
       // const response = await axios.post('http://localhost:3005/api/auth/register', registrationData);
-      const response = await axios.post(
-        "http://192.168.100.10:3005/api/auth/register",
+      const response = await Requests.post(
+        "api/auth/register",
         registrationData
       );
 
