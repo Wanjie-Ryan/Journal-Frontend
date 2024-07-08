@@ -10,7 +10,7 @@ import {
 } from "react-native-paper";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import Icon from "react-native-vector-icons/MaterialIcons";
 const Dashboard = ({ navigation }) => {
   const [journals, setJournals] = useState([]);
   const [periodJournals, setPeriodJournals] = useState([]);
@@ -152,12 +152,23 @@ const Dashboard = ({ navigation }) => {
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Journal App</Text>
-        <Button
+        {/* <Button
           mode="contained"
           onPress={() => navigation.navigate("CreateJournal")}
         >
           Create Journal
-        </Button>
+        </Button> */}
+        <View style={styles.headerButtons}>
+          <TouchableOpacity onPress={() => navigation.navigate("Settings")}>
+            <Icon name="settings" size={28} color="black" />
+          </TouchableOpacity>
+          <Button
+            mode="contained"
+            onPress={() => navigation.navigate("CreateJournal")}
+          >
+            Create Journal
+          </Button>
+        </View>
       </View>
 
       {/* Filter by Category */}
@@ -349,6 +360,10 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 24,
     fontWeight: "bold",
+  },
+  headerButtons: {
+    flexDirection: "row",
+    alignItems: "center",
   },
   filterContainer: {
     marginBottom: 20,
