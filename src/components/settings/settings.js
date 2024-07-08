@@ -4,6 +4,7 @@ import { Text, Button, TextInput } from "react-native-paper";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Toast from "react-native-toast-message";
+import Requests from "../../API/api";
 const Settings = ({ navigation }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -13,8 +14,8 @@ const Settings = ({ navigation }) => {
     try {
       setLoading(true);
       const token = await AsyncStorage.getItem("token");
-      await axios.put(
-        `http://192.168.100.10:3005/api/auth/updateProfile`,
+      await Requests.put(
+        `api/auth/updateProfile`,
         {
           username,
           password,
