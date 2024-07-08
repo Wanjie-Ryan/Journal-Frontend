@@ -5,7 +5,7 @@ import axios from "axios";
 import Toast from "react-native-toast-message";
 import { LogContext } from "../../context/LogContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import Requests from "../../API/api";
 const Login = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -32,10 +32,7 @@ const Login = ({ navigation }) => {
       };
 
       // const response = await axios.post('http://localhost:3005/api/auth/register', registrationData);
-      const response = await axios.post(
-        "http://192.168.100.10:3005/api/auth/login",
-        loginData
-      );
+      const response = await Requests.post("api/auth/login", loginData);
 
       // console.log(response);
       const tok = await AsyncStorage.setItem("token", response.data.token);
